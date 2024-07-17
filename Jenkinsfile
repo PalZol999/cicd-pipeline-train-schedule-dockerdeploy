@@ -7,29 +7,7 @@ pipeline {
                 sh './gradlew build --no-daemon'
                 archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
-        }
-        stage('Docker Image') {
-            when {
-                branch'master'
-            }
-            steps {
-                script {
-                    app = docker.build("palzol/train-schedule")
-                    app.inside{
-                        sh 'echo $(curl localhost:8080)'
-                    }
-                }
-            }
-        }
-        stage('Push docker'){
-             when {
-                branch'master'
-            }
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-                        app.push("${env.BUIL_NUMBER}")
-                    }
+        
             
         }
     }
